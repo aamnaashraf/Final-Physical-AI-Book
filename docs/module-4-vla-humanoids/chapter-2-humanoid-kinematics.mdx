@@ -1,0 +1,48 @@
+﻿---
+title: Humanoid Kinematics Basics
+sidebar_position: 2
+estimated_time: 20
+learning_objectives:
+  - Compute forward and inverse kinematics for humanoid limbs
+  - Understand joint constraints and motion planning
+  - Apply kinematics to robot arms, legs, and whole-body movements
+  - Visualize humanoid movements in simulation
+---
+
+import LearningObjectives from '@site/src/components/LearningObjectives';
+
+# Humanoid Kinematics Basics
+
+<LearningObjectives objectives={frontMatter.learning_objectives} />
+
+Humanoid robots rely heavily on **kinematics** to perform precise movements. Kinematics deals with the geometry of motion without considering the forces causing it.
+
+---
+
+## Key Concepts
+
+### Forward Kinematics
+- Calculates the position of the robot’s end-effector given joint angles
+- Uses **Denavit-Hartenberg (DH) parameters** for limb modeling
+- Useful for **simulation and visualization**  
+
+> 💡 **Tip:** Forward kinematics is deterministic: joint angles → position of limb.
+
+### Inverse Kinematics
+- Determines the joint angles required to reach a desired position
+- Often requires iterative solvers or numerical methods
+- Critical for **motion planning and task execution**  
+
+> ⚠️ **Note:** Multiple solutions may exist; constraints and joint limits must be respected.
+
+### Joint Constraints
+- Each joint has a **range of motion**  
+- Limits prevent mechanical damage and ensure safe operation  
+- Must be considered during trajectory planning
+
+---
+
+## Example: Humanoid Arm
+
+```text
+Shoulder → Upper Arm → Elbow → Forearm → Wrist → Hand

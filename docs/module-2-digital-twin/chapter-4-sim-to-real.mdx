@@ -1,0 +1,62 @@
+﻿---
+title: From Simulation to Real Robot
+sidebar_position: 4
+estimated_time: 25
+learning_objectives:
+  - Bridge simulation outputs to hardware controllers
+  - Deploy and test control algorithms on physical robots
+  - Validate sensor pipelines and motion planning in real-world scenarios
+  - Understand common pitfalls when transitioning from simulation to hardware
+---
+
+import LearningObjectives from '@site/src/components/LearningObjectives';
+
+# From Simulation to Real Robot
+
+<LearningObjectives objectives={frontMatter.learning_objectives} />
+
+Simulation provides a safe environment to test algorithms, but the ultimate goal is **real-world deployment**. This chapter focuses on bridging the gap between virtual environments and actual robotic hardware.
+
+---
+
+## Bridging Simulation to Hardware
+
+Key steps to transition from simulation to real robots:
+
+1. **Export Control Commands**  
+   - Map simulated actuators and joints to real hardware interfaces  
+   - Ensure units and scales match between simulation and robot  
+
+2. **Validate Sensor Pipelines**  
+   - Test cameras, LiDAR, and IMU data streams on the real robot  
+   - Calibrate sensors to account for real-world noise and drift  
+
+3. **Motion Planning & Safety**  
+   - Test trajectories in simulation first  
+   - Use soft limits and collision checking to prevent hardware damage  
+
+4. **Integration with ROS 2 or Control Software**  
+   - Ensure communication nodes match the simulated environment  
+   - Verify message timing, topic names, and parameter configurations  
+
+---
+
+## Common Challenges
+
+- **Simulation-Real Gap**: Differences in dynamics, friction, or sensor noise  
+- **Hardware Limitations**: Actuator speed, torque limits, and mechanical compliance  
+- **Unexpected Interactions**: Environmental factors that were not simulated  
+
+---
+
+## Best Practices
+
+- Start with small, simple motions before full autonomy  
+- Incrementally test sensor integration  
+- Keep logs and compare simulated vs. real-world data  
+- Use modular control pipelines to minimize risks  
+
+---
+
+**Next Steps →** *Module 2 Capstone: End-to-End Digital Twin Project*
+

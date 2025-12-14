@@ -1,0 +1,133 @@
+---
+title: Introduction to Physical AI & Humanoid Robotics
+description: A streamlined introduction to Physical AI for the Hackathon Edition. Learn the essential skills needed to build intelligent robotics systems that perceive, plan, and act in the physical world.
+keywords: [physical AI, humanoid robotics, ROS 2, Isaac Sim, VLA, hackathon robotics]
+sidebar_position: 1
+estimated_time: 15
+learning_objectives:
+  - Understand the concept of Physical AI and why it's essential for modern robotics
+  - Identify the core components of Physical AI systems (perception, planning, action, learning)
+  - Explore the structure of this Hackathon Edition course and its module flow
+  - Select the correct hardware or simulation path for completing the hackathon tasks
+---
+
+import LearningObjectives from '@site/src/components/LearningObjectives';
+
+# Introduction to Physical AI & Humanoid Robotics
+
+<LearningObjectives objectives={frontMatter.learning_objectives} />
+
+Welcome to the **Physical AI & Humanoid Robotics — Hackathon Edition**.  
+This version of the course focuses on **practical, hands-on robotics skills** you’ll need for building a working humanoid system within a limited timeframe.
+
+## What is Physical AI?
+
+**Physical AI** refers to artificial intelligence that goes beyond the screen and interacts with the real world. Unlike traditional AI models that operate only on data, Physical AI connects **sensing, reasoning, and robot actions** through:
+
+- **Perception** – Cameras, LiDAR, depth sensors, voice input  
+- **Planning** – Deciding *what to do next* in a dynamic world  
+- **Action** – Motors, actuators, and manipulation tasks  
+- **Learning** – Improving performance from experience or data  
+
+These four components form the backbone of your upcoming hackathon tasks.
+
+## Course Overview
+
+This Hackathon Edition compresses the original 13-week curriculum into a **rapid, targeted learning journey**, preparing you for real-world humanoid robotics challenges.
+
+### Weeks 1–2: Foundations
+- Overview of Physical AI and robotics pipeline  
+- Hardware setup (Workstation, Edge Kit, or Cloud Simulation)  
+- Environment configuration and productivity tools  
+
+### Module 1: The Robotic Nervous System (Weeks 3–5)
+Master **ROS 2**, the communication backbone of modern robots.  
+You'll build nodes, topics, services, and URDF models used in humanoids.
+
+### Module 2: Digital Twins (Weeks 6–7)
+Use **Gazebo** and **Unity** to develop digital replicas of your robot.  
+Simulations help you test hackathon tasks faster and safely.
+
+### Module 3: NVIDIA Isaac (Weeks 8–10)
+Implement perception and navigation pipelines using **Isaac Sim**, including:
+- VSLAM  
+- 3D perception  
+- Basic navigation  
+
+### Module 4: VLA & Humanoids (Weeks 11–13)
+Integrate **Vision-Language-Action models** to control humanoid robots.  
+You’ll work with:
+- Kinematics  
+- Manipulation tasks  
+- Voice/LLM-based control  
+
+### Week 13: Capstone / Hackathon Build
+Construct a simplified humanoid workflow:  
+**Voice Input → Plan → Navigate → Perceive → Manipulate**
+
+## Who This Course Is For
+
+This edition is ideal for:
+
+- Hackathon participants  
+- Developers wanting rapid robotics exposure  
+- Engineers who need hands-on robotics project experience  
+- Students preparing for robotics competitions  
+
+### Prerequisites
+- Python experience  
+- Ubuntu/Linux basics  
+- Linear algebra fundamentals  
+- 8–12 hours/week for practice  
+
+## Learning Approach
+
+Every chapter includes:
+
+1. **Learning Objectives**  
+2. **Prerequisites**  
+3. **Main Content**  
+4. **Hands-On Exercises**  
+5. **Summary**  
+6. **References & Resources**
+
+## Getting Started
+
+1. Choose your hardware entry point:  
+   - [Workstation](./setup/workstation)  
+   - [Edge Kit](./setup/edge-kit)  
+   - [Cloud](./setup/cloud)
+
+2. Review essential robotics terms in the [Glossary](./references/glossary)
+
+3. Begin Module 1: [ROS 2 Architecture](./module-1-ros2)
+
+## Assessment Structure
+
+You will complete:
+
+- **ROS 2 Mini Project**  
+- **Simulation Environment Build**  
+- **Isaac Perception Pipeline**  
+- **Hackathon Capstone**  
+
+Each includes rubrics for: Needs Improvement, Proficient, Excellent.
+
+## Support and Resources
+
+- Robotics Glossary  
+- Hardware Setup Guides  
+- Module-by-module troubleshooting notes  
+
+---
+
+**Ready to start?** Pick your setup path and begin building your Physical AI skills!
+
+<div style={{marginTop: '2rem'}}>
+  <a href="./setup/workstation" className="button button--primary button--lg" style={{marginRight: '1rem'}}>
+    Workstation Setup →
+  </a>
+  <a href="./module-1-ros2/" className="button button--secondary button--lg">
+    Jump to Module 1 →
+  </a>
+</div>

@@ -1,0 +1,98 @@
+﻿---
+title: Reinforcement Learning & Simulation
+sidebar_position: 4
+estimated_time: 25
+learning_objectives:
+  - Train RL policies in simulator for robot behaviors
+  - Understand reward shaping and policy optimization
+  - Integrate RL policies with Isaac Sim
+  - Evaluate and refine autonomous behaviors
+---
+
+import LearningObjectives from '@site/src/components/LearningObjectives';
+
+# Reinforcement Learning & Simulation
+
+<LearningObjectives objectives={frontMatter.learning_objectives} />
+
+**Reinforcement Learning (RL)** allows robots to learn complex behaviors by interacting with their environment. Isaac Sim provides a safe, high-fidelity environment for training RL policies before deploying them on physical robots.
+
+---
+
+## Key Concepts
+
+1. **RL Basics**
+   - **Agent**: The robot being trained  
+   - **Environment**: The simulation or real-world scenario  
+   - **State**: Current observation of the environment  
+   - **Action**: Robot commands (e.g., joint velocities, wheel speeds)  
+   - **Reward**: Feedback for desired or undesired outcomes  
+
+2. **Policy**
+   - A function mapping states to actions  
+   - Can be deterministic or stochastic  
+
+3. **Value Functions**
+   - Estimate expected rewards for states or actions  
+   - Used in policy optimization  
+
+4. **Reward Shaping**
+   - Design rewards to encourage desired behaviors  
+   - Include penalties for unsafe or inefficient actions  
+
+---
+
+## Training RL Policies in Isaac Sim
+
+1. **Set Up Simulation Environment**
+   - Use photorealistic environments and realistic physics  
+   - Include sensors (camera, LiDAR, IMU) for perception  
+
+2. **Define Reward Function**
+   - Example: +10 for reaching goal, -1 for collisions  
+   - Use dense rewards for faster learning  
+
+3. **Select RL Algorithm**
+   - Popular choices: PPO, DDPG, SAC  
+   - Use stable-baselines3 or Isaac Gym RL API  
+
+4. **Train the Agent**
+   - Run multiple episodes in simulation  
+   - Monitor cumulative reward and policy convergence  
+
+5. **Evaluate Policies**
+   - Test trained agent in unseen environments  
+   - Check for stability, robustness, and safe behaviors  
+
+---
+
+## Integration with Navigation & Perception
+
+- Connect RL agent output to **motion controllers**  
+- Use perception modules for state estimation  
+- Fine-tune reward signals based on actual navigation performance  
+
+---
+
+## Best Practices
+
+- Start training with simple tasks before scaling complexity  
+- Log metrics and visualize agent behavior for debugging  
+- Save and checkpoint policies regularly  
+- Combine simulation data with real-world testing for robust deployment  
+
+---
+
+## Summary
+
+By the end of this chapter, you will be able to:
+
+- Train reinforcement learning policies in Isaac Sim  
+- Design reward functions for desired behaviors  
+- Integrate learned policies with navigation and perception pipelines  
+- Evaluate and refine autonomous robot behaviors in simulation  
+
+---
+
+**Next Chapter →** *Module 3 Chapter 5: Capstone Project — Autonomous Humanoid System*
+

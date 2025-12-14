@@ -1,0 +1,76 @@
+﻿---
+title: Advanced VSLAM Techniques
+sidebar_position: 2
+estimated_time: 20
+learning_objectives:
+  - Understand loop closure and bundle adjustment
+  - Implement VSLAM pipelines for robot localization
+  - Evaluate accuracy of 3D reconstructions
+  - Integrate VSLAM outputs with navigation systems
+---
+
+import LearningObjectives from '@site/src/components/LearningObjectives';
+
+# Advanced VSLAM Techniques
+
+<LearningObjectives objectives={frontMatter.learning_objectives} />
+
+**Visual Simultaneous Localization and Mapping (VSLAM)** allows robots to build maps of unknown environments while tracking their position in real-time. This chapter focuses on advanced techniques for improving accuracy and robustness.
+
+---
+
+## Key Concepts
+
+1. **Loop Closure**
+   - Detect when the robot revisits a previously seen area  
+   - Correct accumulated drift in the robot’s pose estimation  
+
+2. **Bundle Adjustment**
+   - Optimize all camera poses and 3D landmark positions  
+   - Minimize the reprojection error to improve map accuracy  
+
+3. **Feature Matching**
+   - Identify key points in images (SIFT, ORB, or SURF)  
+   - Track points across frames to compute relative motion  
+
+---
+
+## VSLAM Pipeline Overview
+
+1. **Capture Images** from camera or simulated sensors  
+2. **Feature Extraction & Matching** to identify correspondences  
+3. **Pose Estimation** using matched features  
+4. **Map Optimization** with bundle adjustment  
+5. **Loop Closure Detection** to reduce accumulated errors  
+
+---
+
+## Integration with Isaac Sim
+
+- Use **simulated camera feeds** for testing VSLAM algorithms  
+- Evaluate performance in photorealistic environments  
+- Generate synthetic datasets for training and validation  
+
+---
+
+## Best Practices
+
+- Start with simple, feature-rich environments  
+- Use high-frame-rate cameras to reduce motion blur  
+- Combine VSLAM with IMU data for better pose estimation  
+- Log and visualize trajectories for debugging  
+
+---
+
+## Summary
+
+After completing this chapter, you should be able to:
+
+- Implement loop closure and bundle adjustment in VSLAM pipelines  
+- Evaluate map accuracy and robot localization  
+- Integrate VSLAM outputs with your robot navigation system  
+
+---
+
+**Next Chapter →** *Module 3 Chapter 3: Navigation & Path Planning*
+

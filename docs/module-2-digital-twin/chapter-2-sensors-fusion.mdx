@@ -1,0 +1,71 @@
+﻿---
+title: Chapter 2 — Sensors & Fusion
+description: Learn the essential sensors used in robotics and how to combine their data through sensor fusion for reliable perception.
+keywords: [sensors, sensor fusion, robotics, digital twins, module 2]
+sidebar_position: 2
+---
+
+# Sensors & Fusion
+
+Robots rely on multiple sensors to perceive their environment. Each sensor has strengths and limitations.  
+**Sensor fusion** combines data from different sensors to create a more accurate and reliable understanding of the world.
+
+---
+
+## Common Robotics Sensors
+
+### **1. Cameras**
+- RGB cameras for visual perception  
+- Depth cameras for 3D perception  
+- Applications: object detection, SLAM, gesture recognition  
+
+### **2. LiDAR**
+- Measures distances using laser pulses  
+- Generates 3D point clouds of the environment  
+- Applications: mapping, navigation, obstacle detection  
+
+### **3. IMU (Inertial Measurement Unit)**
+- Measures acceleration and angular velocity  
+- Helps estimate robot pose and motion  
+- Applications: stabilization, navigation, odometry  
+
+### **4. Force/Torque Sensors**
+- Measure interaction forces at joints or end-effectors  
+- Applications: manipulation, assembly, safe human-robot interaction  
+
+---
+
+## Why Sensor Fusion is Important
+
+Single sensors are prone to errors, noise, or occlusions. Sensor fusion improves:
+
+- Accuracy of robot localization  
+- Robustness of perception in dynamic environments  
+- Reliability for autonomous navigation and manipulation  
+
+---
+
+## Fusion Techniques
+
+Some common methods used in robotics:
+
+1. **Kalman Filter** – combines noisy sensor data for state estimation  
+2. **Extended/Unscented Kalman Filters** – handle nonlinear dynamics  
+3. **Particle Filters** – probabilistic localization in uncertain environments  
+4. **Complementary Filters** – combine fast/slow sensor signals  
+
+---
+
+## Learning Outcomes for Chapter 2
+
+By the end of this chapter, you should be able to:
+
+- Identify core sensors used in robotics  
+- Understand the strengths and limitations of each sensor  
+- Implement basic sensor fusion for robot perception  
+- Apply sensor data to navigation, mapping, and manipulation tasks  
+
+---
+
+**Next Chapter →** *Simulating Robot Movements & Environment Interactions*
+

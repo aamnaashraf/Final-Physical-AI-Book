@@ -1,0 +1,47 @@
+﻿---
+title: Navigation Stacks & Integration
+sidebar_position: 3
+estimated_time: 20
+learning_objectives:
+  - Deploy and tune navigation stacks like Nav2
+  - Configure robot localization and mapping
+  - Integrate motion planning with perception systems
+  - Troubleshoot navigation issues in simulation and real robots
+---
+
+import LearningObjectives from '@site/src/components/LearningObjectives';
+
+# Navigation Stacks & Integration
+
+<LearningObjectives objectives={frontMatter.learning_objectives} />
+
+Navigation is a critical component for autonomous robots. In this chapter, we focus on **deploying and integrating ROS 2 navigation stacks**, specifically **Nav2**, within Isaac Sim and real-world scenarios.
+
+---
+
+## Key Concepts
+
+1. **Nav2 Overview**
+   - Provides full navigation pipeline: localization, planning, control  
+   - Works with 2D LiDAR, IMU, and odometry sensors  
+   - Supports modular configuration for different robot platforms  
+
+2. **Localization**
+   - Use **AMCL (Adaptive Monte Carlo Localization)** for real-time pose estimation  
+   - Tune particle filter parameters for accuracy  
+
+3. **Mapping**
+   - Build static or dynamic occupancy grids using simulated sensors  
+   - Use SLAM-based maps for unknown environments  
+
+---
+
+## Integration Steps
+
+1. **Configure Robot Description**
+   - Ensure URDF/Xacro matches simulated or real robot  
+   - Define sensor frames and joints for Nav2  
+
+2. **Launch Navigation Stack**
+   ```bash
+   ros2 launch nav2_bringup navigation_launch.py

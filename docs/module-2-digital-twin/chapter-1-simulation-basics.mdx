@@ -1,0 +1,92 @@
+﻿---
+title: Chapter 1 — Simulation Basics
+description: Learn the core concepts of robotics simulation and why simulation is essential for modern Physical AI workflows.
+keywords: [simulation, robotics, digital twins, physics engines, module 2]
+sidebar_position: 1
+---
+
+# Simulation Basics
+
+Simulation is the foundation of Digital Twin development.  
+Before running robots in the real world, engineers test their **motion**, **sensors**, and **environment interactions** safely inside a virtual environment.
+
+Robotics simulation enables faster development, reduces hardware risks, and supports repeatable experiments.
+
+---
+
+## Why Simulation Matters
+
+Humanoid and mobile robots operate in complex environments. Simulation helps you:
+
+- Test navigation & perception algorithms  
+- Validate robot movements without causing hardware damage  
+- Experiment with new ideas quickly  
+- Reproduce tests with consistent conditions  
+- Generate synthetic training data for AI models  
+
+---
+
+## Core Elements of a Robotics Simulation
+
+### **1. 3D Environment**
+A realistic virtual world containing:
+- Objects  
+- Obstacles  
+- Surfaces  
+- Lighting  
+
+These elements mimic the physical surroundings where the robot operates.
+
+---
+
+### **2. Robot Model**
+A simulated representation of the real robot including:
+- Joints & links  
+- Sensors  
+- Actuator limits  
+- Collision geometry  
+
+In this module, we will work with **URDF/SDFormat** robot models.
+
+---
+
+### **3. Physics Engine**
+The engine ensures the world behaves realistically by simulating:
+- Gravity  
+- Friction  
+- Collisions  
+- Dynamics & inertia  
+
+Common physics engines:
+- **Gazebo Classic / Ignition**  
+- **NVIDIA PhysX** (used in Isaac Sim)  
+
+---
+
+### **4. Sensors**
+Simulation platforms provide realistic sensor models for:
+- RGB & Depth cameras  
+- LiDAR  
+- IMU  
+- Force/Torque sensors  
+
+These are crucial for training perception and control algorithms.
+
+---
+
+## What You Will Learn in This Module
+
+In Module 2, you will:
+
+- Build simulation environments  
+- Load and test robot models  
+- Simulate cameras, LiDAR, and IMUs  
+- Debug perception and navigation in a virtual world  
+- Prepare pipelines for real-world deployment  
+
+This chapter forms the foundation for creating complete **Digital Twins** in the next lessons.
+
+---
+
+**Next Chapter →** *Building Your First Simulation Environment*
+

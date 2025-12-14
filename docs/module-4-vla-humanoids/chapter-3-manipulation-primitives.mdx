@@ -1,0 +1,93 @@
+﻿---
+title: Manipulation Primitives
+sidebar_position: 3
+estimated_time: 20
+learning_objectives:
+  - Implement pick-and-place and grasp primitives
+  - Learn motion planning for manipulation tasks
+  - Understand grasp strategies and robot-hand kinematics
+  - Test manipulation in simulation before real deployment
+---
+
+# Manipulation Primitives
+
+Manipulation primitives are **basic building blocks** of humanoid robot actions. They allow robots to **pick, place, grasp, and interact** with objects in the environment.
+
+---
+
+## Key Concepts
+
+### Pick-and-Place
+- Move the robot arm to approach an object  
+- Grasp the object securely  
+- Move object to the target location  
+- Release safely  
+
+> **💡 Tip:** Always define safe trajectories to avoid collisions and joint limits.
+
+### Grasp Primitives
+- **Top-down grasp:** Grasping objects from above  
+- **Side grasp:** Lateral approach for wider objects  
+- **Power grasp:** Entire hand wraps around the object  
+- **Precision grasp:** Only fingertips touch the object  
+
+> **📝 Pro Tip:** Visualize contact points in simulation to optimize grip.
+
+---
+
+## Motion Planning for Manipulation
+
+1. Define start and goal positions for the end-effector  
+2. Use inverse kinematics to compute joint angles  
+3. Plan trajectory considering obstacles and joint limits  
+4. Execute movement in simulation first  
+
+> **⚠️ Caution:** Always check collision detection before deploying on a real robot.
+
+---
+
+## Example Workflow: Pick a Cube
+
+1. **Perception:** Detect cube using camera and depth sensors  
+2. **Planning:** Compute IK solution and trajectory  
+3. **Execution:** Move arm and close gripper  
+4. **Place:** Move to target location and open gripper  
+5. **Verification:** Confirm cube is correctly placed  
+
+> **💡 Fun Fact:** Robots can learn to improve grasping over time using reinforcement learning!
+
+---
+
+## Advanced Strategies
+
+- **Adaptive Grasping:** Adjust grip based on object size and weight  
+- **Sequential Manipulation:** Perform multiple pick-and-place tasks efficiently  
+- **Bimanual Manipulation:** Use both arms for complex tasks  
+
+> **📦 Hackathon Idea:** Combine perception + RL + manipulation primitives to create a **robot bartender** that serves drinks autonomously!
+
+---
+
+## Testing in Isaac Sim
+
+- Simulate objects of different shapes and weights  
+- Monitor joint limits and collisions  
+- Test grasp success rate and adjust control parameters  
+
+> **📝 Tip:** Logging trajectories helps debug failures and improve planning.
+
+---
+
+## Summary
+
+After this chapter, you will be able to:
+
+- Implement basic pick-and-place and grasp actions  
+- Plan safe trajectories for manipulation  
+- Use simulation to validate robot behaviors  
+- Apply advanced strategies for efficient manipulation
+
+---
+
+**Next Chapter →** Module 4 Chapter 4: VLA — Action Integration & Voice Commands
+

@@ -1,0 +1,59 @@
+﻿---
+title: Isaac Sim — Introduction & Setup
+sidebar_position: 1
+estimated_time: 15
+learning_objectives:
+  - Get started with Isaac Sim and environment setup
+  - Understand the core features and architecture of Isaac Sim
+  - Install required software and dependencies for simulation
+  - Launch and explore a basic simulation scene
+---
+
+import LearningObjectives from '@site/src/components/LearningObjectives';
+
+# Isaac Sim — Introduction & Setup
+
+<LearningObjectives objectives={frontMatter.learning_objectives} />
+
+**NVIDIA Isaac Sim** is a GPU-accelerated robotics simulator designed for developing, testing, and deploying autonomous robots in high-fidelity 3D environments. It provides realistic physics, photorealistic rendering, and seamless integration with ROS 2.
+
+---
+
+## Why Isaac Sim?
+
+- Simulates complex robotics scenarios safely and efficiently  
+- Integrates with **ROS 2** for real-time robot control  
+- Supports **physics-based simulation** for manipulators, mobile robots, and humanoids  
+- Enables AI/ML model testing in realistic environments  
+- Accelerates development by creating **Digital Twins**  
+
+---
+
+## Core Features
+
+1. **Photorealistic Rendering** — realistic lighting, shadows, and materials  
+2. **Physics Engine** — accurate simulation of dynamics, collisions, and forces  
+3. **Sensor Simulation** — cameras, LiDAR, IMUs, and force sensors  
+4. **ROS 2 Integration** — publish/subscribe topics, services, and actions  
+5. **Python API** — flexible scripting for robot behavior and environment control  
+
+---
+
+## Setting Up Isaac Sim
+
+### 1. Install Dependencies
+
+- **Python 3.10+**  
+- **NVIDIA GPU drivers** compatible with your system  
+- **CUDA Toolkit** (required for GPU acceleration)  
+- **Omniverse Kit** packages for Isaac Sim  
+
+### 2. Download Isaac Sim
+
+- Visit [NVIDIA Isaac Sim Downloads](https://developer.nvidia.com/isaac-sim)  
+- Choose the version compatible with your OS and GPU  
+
+### 3. Launch Isaac Sim
+
+```bash
+./launch.sh
