@@ -1,5 +1,6 @@
-import os
+from http.server import BaseHTTPRequestHandler
 import json
+import os
 from typing import List, Dict
 from datetime import datetime
 
@@ -13,18 +14,18 @@ from langchain_core.output_parsers import StrOutputParser
 # Vector DB
 from pinecone import Pinecone
 
-# Global variables for caching (to avoid re-initialization on every request)
+# Global variables for caching
 embeddings_model = None
 llm_model = None
 pinecone_index = None
 conversation_history = []
 
 def initialize_models():
-    """Initialize AI models and Pinecone connection (cached globally)"""
+    """Initialize AI models and Pinecone connection"""
     global embeddings_model, llm_model, pinecone_index
 
     if embeddings_model is not None and llm_model is not None and pinecone_index is not None:
-        return  # Already initialized
+        return
 
     GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
     PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
@@ -33,8 +34,6 @@ def initialize_models():
 
     if not GOOGLE_API_KEY or not PINECONE_API_KEY:
         raise ValueError("Missing required API keys")
-
-    print("Initializing models...")
 
     embeddings_model = GoogleGenerativeAIEmbeddings(
         model="models/text-embedding-004",
@@ -50,16 +49,11 @@ def initialize_models():
     pc = Pinecone(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
     pinecone_index = pc.Index(PINECONE_INDEX_NAME)
 
-    print("Models initialized successfully")
-
-async def get_rag_response(query: str, software: str = None, hardware: str = None):
-    """Generate RAG response for the query"""
+def get_rag_response(query: str, software: str = None, hardware: str = None):
+    """Generate RAG response"""
     global embeddings_model, llm_model, pinecone_index, conversation_history
 
-    # Embed query
     query_vector = embeddings_model.embed_query(query)
-
-    # Search Pinecone
     results = pinecone_index.query(vector=query_vector, top_k=5, include_metadata=True)
 
     retrieved_docs = []
@@ -79,7 +73,6 @@ async def get_rag_response(query: str, software: str = None, hardware: str = Non
         if {"source": doc_url, "filename": filename} not in sources_list:
             sources_list.append({"source": doc_url, "filename": filename})
 
-    # Build conversation context
     conversation_context = "\n".join([f"{m['role']}: {m['content']}" for m in conversation_history[-6:]])
 
     personalization_context = ""
@@ -111,12 +104,10 @@ async def get_rag_response(query: str, software: str = None, hardware: str = Non
     chain = RunnableLambda(format_context) | prompt | llm_model | StrOutputParser()
     response = chain.invoke({"input": query})
 
-    # Update conversation history
     timestamp = datetime.now().isoformat()
     conversation_history.append({"role": "user", "content": query, "timestamp": timestamp})
     conversation_history.append({"role": "assistant", "content": response, "timestamp": timestamp})
 
-    # Keep only last 7 messages
     if len(conversation_history) > 7:
         conversation_history = conversation_history[-7:]
 
@@ -126,62 +117,54 @@ async def get_rag_response(query: str, software: str = None, hardware: str = Non
         "conversation_history": conversation_history
     }
 
-def handler(request):
-    """Vercel serverless function handler"""
-    from http.server import BaseHTTPRequestHandler
-    import asyncio
+class handler(BaseHTTPRequestHandler):
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
 
-    # Handle CORS preflight
-    if request.method == 'OPTIONS':
-        return {
-            'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type',
-            },
-            'body': ''
-        }
+    def do_POST(self):
+        try:
+            # Initialize models
+            initialize_models()
 
-    if request.method != 'POST':
-        return {
-            'statusCode': 405,
-            'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-            'body': json.dumps({"error": "Method not allowed"})
-        }
+            # Read request body
+            content_length = int(self.headers['Content-Length'])
+            body = self.rfile.read(content_length)
+            data = json.loads(body.decode('utf-8'))
 
-    try:
-        # Initialize models (cached after first call)
-        initialize_models()
+            query = data.get("query", "")
+            software = data.get("software")
+            hardware = data.get("hardware")
 
-        # Parse request body
-        body = request.json if hasattr(request, 'json') else json.loads(request.body)
-        query = body.get("query", "")
-        software = body.get("software")
-        hardware = body.get("hardware")
+            if not query:
+                self.send_response(400)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Query is required"}).encode())
+                return
 
-        if not query:
-            return {
-                'statusCode': 400,
-                'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-                'body': json.dumps({"error": "Query is required"})
-            }
+            # Get RAG response
+            result = get_rag_response(query, software, hardware)
 
-        # Get RAG response
-        result = asyncio.run(get_rag_response(query, software, hardware))
+            # Send response
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode())
 
-        return {
-            'statusCode': 200,
-            'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-            'body': json.dumps(result)
-        }
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            import traceback
+            traceback.print_exc()
 
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        import traceback
-        traceback.print_exc()
-        return {
-            'statusCode': 500,
-            'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
-            'body': json.dumps({"answer": "Sorry, AI is unavailable right now.", "error": str(e)})
-        }
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            error_response = {"answer": "Sorry, AI is unavailable right now.", "error": str(e)}
+            self.wfile.write(json.dumps(error_response).encode())
