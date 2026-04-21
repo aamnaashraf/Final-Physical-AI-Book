@@ -1,13 +1,12 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import os
-import urllib.request
-import urllib.error
+import requests
 
 conversation_history = []
 
 def call_groq_api(query: str, software: str = None, hardware: str = None):
-    """Call Groq API directly using urllib"""
+    """Call Groq API using requests library"""
 
     GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "").strip()
     if not GROQ_API_KEY:
@@ -24,14 +23,15 @@ def call_groq_api(query: str, software: str = None, hardware: str = None):
         f"{personalization}"
     )
 
-    # Prepare request to Groq API
     url = "https://api.groq.com/openai/v1/chat/completions"
+
     headers = {
         "Authorization": f"Bearer {GROQ_API_KEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0"
     }
 
-    data = {
+    payload = {
         "model": "llama-3.3-70b-versatile",
         "messages": [
             {"role": "system", "content": system_prompt},
@@ -41,35 +41,30 @@ def call_groq_api(query: str, software: str = None, hardware: str = None):
         "max_tokens": 1024
     }
 
-    # Make request
-    req = urllib.request.Request(
-        url,
-        data=json.dumps(data).encode('utf-8'),
-        headers=headers,
-        method='POST'
-    )
-
     try:
-        with urllib.request.urlopen(req, timeout=8) as response:
-            result = json.loads(response.read().decode('utf-8'))
-            answer = result['choices'][0]['message']['content']
+        response = requests.post(url, json=payload, headers=headers, timeout=8)
+        response.raise_for_status()
 
-            # Update conversation history
-            from datetime import datetime
-            timestamp = datetime.now().isoformat()
-            conversation_history.append({"role": "user", "content": query, "timestamp": timestamp})
-            conversation_history.append({"role": "assistant", "content": answer, "timestamp": timestamp})
+        result = response.json()
+        answer = result['choices'][0]['message']['content']
 
-            if len(conversation_history) > 7:
-                conversation_history[:] = conversation_history[-7:]
+        from datetime import datetime
+        timestamp = datetime.now().isoformat()
+        conversation_history.append({"role": "user", "content": query, "timestamp": timestamp})
+        conversation_history.append({"role": "assistant", "content": answer, "timestamp": timestamp})
 
-            return {
-                "answer": answer,
-                "sources": [],
-                "conversation_history": conversation_history
-            }
-    except urllib.error.URLError as e:
-        raise Exception(f"Network error: {str(e)}")
+        if len(conversation_history) > 7:
+            conversation_history[:] = conversation_history[-7:]
+
+        return {
+            "answer": answer,
+            "sources": [],
+            "conversation_history": conversation_history
+        }
+    except requests.exceptions.HTTPError as e:
+        raise Exception(f"HTTP Error {e.response.status_code}: {e.response.text}")
+    except requests.exceptions.RequestException as e:
+        raise Exception(f"Request failed: {str(e)}")
     except Exception as e:
         raise Exception(f"API call failed: {str(e)}")
 
@@ -113,7 +108,7 @@ class handler(BaseHTTPRequestHandler):
             self.end_headers()
 
             error_response = {
-                "answer": f"AI Error: {str(e)}. Please try again.",
+                "answer": f"Error: {str(e)}",
                 "error": str(e),
                 "sources": [],
                 "conversation_history": []

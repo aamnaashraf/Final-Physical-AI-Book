@@ -2,4 +2,5 @@ python-dotenv
 langchain-groq
 langchain-core
 pinecone-client
+requests
 
