@@ -1,5 +1,5 @@
 python-dotenv
-langchain-google-genai
+langchain-groq
 langchain-core
 pinecone-client
 

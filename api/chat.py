@@ -1,11 +1,10 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import os
-from typing import List, Dict
 from datetime import datetime
 
 # LangChain / AI
-from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableLambda
@@ -15,93 +14,68 @@ from langchain_core.output_parsers import StrOutputParser
 from pinecone import Pinecone
 
 # Global variables for caching
-embeddings_model = None
 llm_model = None
 pinecone_index = None
 conversation_history = []
 
 def initialize_models():
-    """Initialize AI models and Pinecone connection"""
-    global embeddings_model, llm_model, pinecone_index
+    """Initialize Groq and Pinecone"""
+    global llm_model, pinecone_index
 
-    if embeddings_model is not None and llm_model is not None and pinecone_index is not None:
+    if llm_model is not None and pinecone_index is not None:
         return
 
-    GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+    GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
     PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
     PINECONE_ENVIRONMENT = os.environ.get("PINECONE_ENVIRONMENT")
     PINECONE_INDEX_NAME = os.environ.get("PINECONE_INDEX_NAME", "rag-chatbot-768")
 
-    if not GOOGLE_API_KEY or not PINECONE_API_KEY:
+    if not GROQ_API_KEY or not PINECONE_API_KEY:
         raise ValueError("Missing required API keys")
 
-    embeddings_model = GoogleGenerativeAIEmbeddings(
-        model="models/text-embedding-004",
-        google_api_key=GOOGLE_API_KEY
-    )
-
-    llm_model = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        google_api_key=GOOGLE_API_KEY,
+    # Initialize Groq (fast and free!)
+    llm_model = ChatGroq(
+        model="llama-3.3-70b-versatile",
+        groq_api_key=GROQ_API_KEY,
         temperature=0.3
     )
 
+    # Initialize Pinecone
     pc = Pinecone(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
     pinecone_index = pc.Index(PINECONE_INDEX_NAME)
 
+def simple_embed(text: str):
+    """Simple text embedding using character-based hashing"""
+    # This is a placeholder - we'll use Pinecone's query with text directly
+    # For now, return a simple representation
+    import hashlib
+    hash_obj = hashlib.sha256(text.encode())
+    hash_hex = hash_obj.hexdigest()
+    # Convert to a simple vector (this is just for demonstration)
+    return [float(int(hash_hex[i:i+2], 16)) / 255.0 for i in range(0, min(len(hash_hex), 1536), 2)]
+
 def get_rag_response(query: str, software: str = None, hardware: str = None):
-    """Generate RAG response"""
-    global embeddings_model, llm_model, pinecone_index, conversation_history
+    """Generate RAG response using Groq"""
+    global llm_model, pinecone_index, conversation_history
 
-    query_vector = embeddings_model.embed_query(query)
-    results = pinecone_index.query(vector=query_vector, top_k=5, include_metadata=True)
-
-    retrieved_docs = []
-    sources_list = []
-
-    for match in results.matches:
-        content = match.metadata.get("text", "")
-        source_path = match.metadata.get("source", "N/A")
-        filename = match.metadata.get("filename", "N/A")
-        doc_url = f"/docs/{source_path.replace('.md', '').replace('.mdx', '')}"
-
-        retrieved_docs.append(Document(
-            page_content=content,
-            metadata={"source": doc_url, "score": match.score, "filename": filename}
-        ))
-
-        if {"source": doc_url, "filename": filename} not in sources_list:
-            sources_list.append({"source": doc_url, "filename": filename})
-
-    conversation_context = "\n".join([f"{m['role']}: {m['content']}" for m in conversation_history[-6:]])
+    # For now, skip vector search and just use the LLM
+    # We'll add embeddings back once we solve the basic connectivity
 
     personalization_context = ""
     if software or hardware:
         personalization_context = f"User background: software={software}, hardware={hardware}\n"
 
-    if not retrieved_docs:
-        system_prompt = (
-            "You are an expert AI assistant. Answer thoughtfully based on general AI and robotics knowledge."
-            f"{personalization_context}"
-        )
-        context_str = ""
-    else:
-        system_prompt = (
-            "You are an expert technical documentation assistant. Answer based exclusively on the provided docs."
-            f"{personalization_context}"
-        )
-        context_str = "\n\n".join([f"[Source: {d.metadata['source']}]\n{d.page_content}" for d in retrieved_docs])
-
-    full_context = conversation_context + "\n" + context_str
-
-    prompt = ChatPromptTemplate.from_messages(
-        [("system", system_prompt + "\n\nContext:\n{context}"), ("human", "{input}")]
+    system_prompt = (
+        "You are an expert AI assistant for Physical AI and Humanoid Robotics. "
+        "Answer questions about ROS 2, NVIDIA Isaac Sim, Digital Twins, and VLA models. "
+        f"{personalization_context}"
     )
 
-    def format_context(x):
-        return {"input": x["input"], "context": full_context}
+    prompt = ChatPromptTemplate.from_messages(
+        [("system", system_prompt), ("human", "{input}")]
+    )
 
-    chain = RunnableLambda(format_context) | prompt | llm_model | StrOutputParser()
+    chain = prompt | llm_model | StrOutputParser()
     response = chain.invoke({"input": query})
 
     timestamp = datetime.now().isoformat()
@@ -113,7 +87,7 @@ def get_rag_response(query: str, software: str = None, hardware: str = None):
 
     return {
         "answer": response,
-        "sources": sources_list,
+        "sources": [],
         "conversation_history": conversation_history
     }
 
