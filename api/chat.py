@@ -9,7 +9,7 @@ conversation_history = []
 def call_groq_api(query: str, software: str = None, hardware: str = None):
     """Call Groq API directly using urllib"""
 
-    GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+    GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "").strip()
     if not GROQ_API_KEY:
         raise ValueError("Missing GROQ_API_KEY")
 
